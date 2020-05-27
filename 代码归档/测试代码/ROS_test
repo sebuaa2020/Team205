@@ -1,0 +1,123 @@
+import os
+import sys
+import time
+import subprocess
+import datetime
+'''
+result = os.getcwd()
+print(result)
+
+result = os.listdir(result)
+print(result)
+'''
+
+#读入测试输入
+with open('test_pattern.txt', 'r') as f:
+    result = f.readlines()
+
+
+
+#启动测试程序
+strss = 'rosrun wprsimulation main'
+os.popen(strss)
+time.sleep(2)
+
+#重定向输入
+sign = 0
+count = 0
+for i in result:
+    i = i.strip('\r\n')
+    if(count == 0):
+        if (i == 'SF_SS_ID1_1'):
+            # 读入建图指令
+            print('SF_SS_ID1_1')
+            strss = 'Y'
+            p = subprocess.Popen(strss, shell=True)
+            p.wait()
+            # r = os.popen(strss)
+            sign = 0
+        else:
+            strss = 'N'
+            p = subprocess.Popen(strss, shell=True)
+            p.wait()
+            # r = os.popen(strss)
+            sign = 0
+
+    if (i == 'SF_SS_ID1_2'):
+        #读入保存地图指令
+        print('SF_SS_ID1_2')
+        strss = 'save'
+        p = subprocess.Popen(strss,shell= True)
+        p.wait()
+        #out = p.stdout.read()
+        #print(out)
+        #r = os.popen(strss)
+        sign = 0
+    elif (i == 'SF_SS_ID2_1'):
+        #添加巡航点
+        print('SF_SS_ID2_1')
+        strss = 'add'
+        p = subprocess.Popen(strss, shell=True)
+        p.wait()
+        # r = os.popen(strss)
+        sign = 1
+    elif (i == 'SF_SS_ID2_2'):
+        #机器人根据指定点导航
+        print('SF_SS_ID2_2')
+        strss = 'navigation'
+        p = subprocess.Popen(strss, shell=True)
+        p.wait()
+        # r = os.popen(strss)
+        sign = 2
+    elif (i == 'SF_SS_ID2_3'):
+        #机器人返回初始地点
+        print('SF_SS_ID2_3')
+        strss = 'return'
+        p = subprocess.Popen(strss, shell=True)
+        p.wait()
+        # r = os.popen(strss)
+        sign = 2
+    elif (i == 'SF_SS_ID3_1'):
+        #机器人识别并抓取物体
+        print('SF_SS_ID3_1')
+        strss = 'grab'
+        p = subprocess.Popen(strss, shell=True)
+        p.wait()
+        # r = os.popen(strss)
+        sign = 2
+    elif (i == 'SF_SS_ID4_1'):
+        #接受用户指令
+        print('SF_SS_ID4_1')
+        strss = 'past'
+        p = subprocess.Popen(strss, shell=True)
+        p.wait()
+        # r = os.popen(strss)
+        sign = 2
+    elif (sign != 0):
+        strss = i
+        if (sign == 1):
+            print ('place_name')
+        elif (sign == 2):
+            print ('dst_name')
+        else:
+            print ('error')
+        r = os.popen(strss)
+        sign = 0
+
+    #print(r)
+    info = p.stderr
+    #print(info)
+    print(info)
+    with open('test_result.txt', 'a') as file:  # 'a'表示append,即在原来文件内容后继续写数据（不清楚原有数据）
+        #for line in info:  # 按行遍历
+            #line = line.strip('\r\n')
+        now = str(datetime.datetime.now())
+        if(info):
+            file.write(now + ':' + i +info)
+        else:
+            file.write(now + ':' + i +'  succeed\n')
+
+    time.sleep(2)
+    count = count + 1
+
+
