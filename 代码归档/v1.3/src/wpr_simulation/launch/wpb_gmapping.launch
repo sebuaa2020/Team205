@@ -45,5 +45,8 @@
 
   <!-- keyboard control -->
   <node pkg="wpr_simulation" type="keyboard_vel_ctrl" name="keyboard_vel_ctrl"/>
+ 
+  <!-- Run sound_play -->
+  <node pkg = "sound_play" name = "soundplay_node" type = "soundplay_node.py" />
 
 </launch>

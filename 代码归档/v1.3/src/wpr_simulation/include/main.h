@@ -13,6 +13,7 @@
 #include <tf/transform_listener.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <std_msgs/String.h>
+#include <sound_play/SoundRequest.h>
 
 #include "grab.h"
 #include "map.h"

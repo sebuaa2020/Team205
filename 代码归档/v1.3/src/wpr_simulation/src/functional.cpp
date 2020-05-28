@@ -10,3 +10,10 @@ bool checkMapExist() {
         return false;
     return true;
 }
+
+// 语音说话
+void Speak(std::string inStr)
+{
+    spk_msg.arg = inStr;
+    speak_pub.publish(spk_msg);
+}

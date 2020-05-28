@@ -28,7 +28,7 @@ void addWaypoint(std::string name) {
     geometry_msgs::PoseStamped robot_pos;
     tf::poseStampedTFToMsg(p, robot_pos);
     ROS_INFO("publish the new waypoint");
-
+    Speak("publish the new waypoint");
     // 新建巡航点并publish
     waterplus_map_tools::Waypoint new_waypoint;
     new_waypoint.name = name;
@@ -38,6 +38,7 @@ void addWaypoint(std::string name) {
 
 bool getWaypoint(std::string name) {
     ROS_INFO("get point information");
+    Speak("get point information");
     srvName.request.name = name;
     return get_wappoint_client.call(srvName);
 }
@@ -48,6 +49,8 @@ void gotoWaypoint(std::string name) {
         return;
     }
     ROS_INFO("Will travel to %s", name);
+    std::string strSpeak = "Will travel to " + name;
+    Speak(strSpeak);
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "map";
     goal.target_pose.header.stamp = ros::Time::now();
@@ -61,8 +64,11 @@ void gotoWaypoint(std::string name) {
     }
     ac.sendGoal(goal);
     ac.waitForResult();
-    if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+    if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         ROS_INFO("Arrived at Waypoint %s", name);
+        strSpeak = "Arrived at Waypoint " + name;
+        Speak(strSpeak);
+    }
     else
         unableToReachDst();
 }

@@ -30,6 +30,9 @@
     <param name="base_local_planner" value="wpbh_local_planner/WpbhLocalPlanner" />
     <param name= "controller_frequency" value="10" type="double"/>
   </node>
+ 
+  <!-- Run sound_play -->
+  <node pkg = "sound_play" name = "soundplay_node" type = "soundplay_node.py" />
 
   <!-- RViz and TF tree -->
   <arg name="model" default="$(find wpb_home_bringup)/urdf/wpb_home.urdf"/>

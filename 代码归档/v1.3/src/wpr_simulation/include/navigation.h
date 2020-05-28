@@ -25,7 +25,6 @@ extern waterplus_map_tools::GetWaypointByName srvName;
 // ac.sendGoal(goal)
 // 向巡航点运动相关
 
-
 void addWaypoint(std::string name);
 bool getWaypoint(std::string name);
 void gotoWaypoint(std::string name);
