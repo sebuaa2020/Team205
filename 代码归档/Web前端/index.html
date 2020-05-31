@@ -1,0 +1,160 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+	.navigation{
+		width: 100px;
+		height: 25px;
+		border-radius: 5px;
+		background: red;
+		color: #fff;
+		right: 5px;
+		top: 5px;
+		text-align: center;
+	}
+	
+	.navigation_input{
+		width: 300px;
+		height: 25px;
+		border-radius: 5px;
+		background: white;
+		right: 5px;
+		top: 5px;
+		text-align: center;
+	}
+	
+	
+</style>
+
+<script type="text/javascript" src="./js/WebSocketMessage.js"></script>
+
+<script>
+	var UTFTranslate = {
+		Change: function(pValue) {
+			return pValue.replace(/[^\u0000-\u00FF]/g, function($0) {
+				return escape($0).replace(/(%u)(\w{4})/gi, "&#x$2;")
+			});
+		},
+		ReChange: function(pValue) {
+			return unescape(pValue.replace(/&#x/g, '%u').replace(/\\u/g, '%u').replace(/;/g, ''));
+		}	
+	};
+</script>
+
+
+<script type="text/javascript">
+	//初始化，隐藏多余内容
+	function init_hid(){
+		document.getElementById('input_nav').style.display="none";
+		document.getElementById('show_nav').style.display="none";
+		document.getElementById('word').style.display="none";
+	}
+	
+	//显示输入框
+	function nav_show(){
+		document.getElementById('input_nav').style.display="";
+		document.getElementById('show_nav').style.display="";
+	}
+	
+	//获取输入的数据
+	function nav_create(){
+		var s = document.getElementById('name').value;
+		document.getElementById('name').value = "";
+		var d = document.getElementById('show_nav');
+		var l = document.createElement("input");
+		l.type = "button";
+		l.value = s;
+		l.onclick = function(){
+			function choseOne(name) {
+				if (chose_One == true) {
+					document.getElementById('word').innerText = "选择了巡航点:" + s;
+					chose_One = false;
+					socket.send("[CHOSE_NAV_POINT:" + s + "]");
+				}
+			}
+			choseOne(s);
+		};
+		d.appendChild(l);
+		
+		for (var i = 0; i < 2; i++) {
+			var b = document.createElement("br");
+			d.appendChild(b);
+		}
+		socket.send("[ADD_NAV_POINT:" + s + "]");
+	}
+	
+	var chose_One = false;
+	//点击了巡航点
+	function nav_goto() {
+		chose_One = true;
+		document.getElementById('word').style.display="";
+		document.getElementById('word').innerText = "选择一个巡航点";
+	}
+	
+	function nav_back(){
+		chose_One = false;
+		document.getElementById('word').style.display="none";
+		
+		socket.send("[GET_BACK_POINT]");
+	}
+
+	
+</script>
+
+<script>
+	var socket;
+	if ("WebSocket" in window) {
+		//var ws = new WebSocket("ws://192.168.0.104:8888");
+		//var ws = new WebSocket("ws://121.40.165.18:8800");
+		var ws = new WebSocket(get_addr());
+		socket = ws;
+		ws.onopen = function() {
+			console.log('连接成功');
+		};
+	
+		ws.onmessage = function(evt) {
+			var received_msg = evt.data; 
+			document.getElementById("showMes").value+=evt.data+"\n";
+		};
+
+		ws.onclose = function() {
+			alert("断开了连接");
+		};
+		
+	} else {
+		alert("浏览器不支持WebSocket");
+	}
+	
+</script>
+
+</head>
+
+<body>
+<br/>
+<br/>
+<div id="index" align="center">
+	<input type="button" class="navigation" onclick="" value="物品识别"/>
+	<input type="button" class="navigation" onclick="nav_show()" value="建立巡航点"/>
+	<input type="button" class="navigation" onclick="nav_goto()" value="前往巡航点"/>
+	<input type="button" class="navigation" onclick="nav_back()" value="返回起始点"/>
+</div>
+<br/>
+<p id="word" align="center"></p>
+<br/>
+<div id="input_nav" align="center">
+	<p>请输入需要建立的巡航点的名字</p>
+	<input id="name" class="navigation_input"/>
+	<input type="button" class="navigation" onclick="nav_create()" value="建立"/>
+</div>
+<br/>
+<br/>
+<div id="show_nav" align="center">
+	<p>巡航点的列表</p>
+</div>
+
+<script>
+	init_hid();
+</script>
+
+</body>
+</html>

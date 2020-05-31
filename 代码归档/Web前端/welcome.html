@@ -1,0 +1,181 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<title>欢迎欢迎！</title>
+
+<style type="text/css">
+	#zhezhao{
+			position: fixed;
+			left: 0px;
+			top: 0px;
+			background: #000;
+			width: 100%;
+			height: 100%;
+			opacity: 0.5;
+	}
+	
+	.tankuang{
+		position: relative;
+		background: #fff;
+		width: 30%;
+		height: 40%;
+		border-radius: 5px;
+		margin: 5% auto;
+	}
+	
+	#header{
+		height: 40px;
+		color: #000;
+		text-align: center;
+	}
+				
+	#header-right{
+		position: absolute;
+		width: 25px;
+		height: 25px;
+		border-radius: 5px;
+		background: red;
+		color: #fff;
+		right: 5px;
+		top: 5px;
+		text-align: center;
+	}
+	
+	#select-button-true{
+		position: absolute;
+		margin-top:200px;
+		margin-right:250px;
+		width: 75px;
+		height: 25px;
+		border-radius: 5px;
+		background: red;
+		color: #fff;
+		right: 5px;
+		top: 5px;
+		text-align: center;
+	}
+	
+	#select-button-false{
+		position: absolute;
+		margin-top:200px;
+		margin-right: 100px;
+		width: 75px;
+		height: 25px;
+		border-radius: 5px;
+		background: red;
+		color: #fff;
+		right: 5px;
+		top: 5px;
+		text-align: center;
+	}
+	
+	#select-button-X{
+		width: 120px;
+		height: 45px;
+		font-size: 20px;
+		border-radius: 5px;
+		background: red;
+		color: #fff;
+		right: 5px;
+		top: 5px;
+		text-align: center;
+	}
+	
+
+</style>
+
+<script type="text/javascript" src="./js/WebSocketMessage.js"></script>
+
+<script type="text/javascript">
+
+	function show(){
+		document.getElementById('zhezhao').style.display="";
+	}
+	
+	function hidder(){
+		document.getElementById('zhezhao').style.display="none";
+		document.getElementById('loading').style.display="none";
+		document.getElementById('Complete').style.display="none";
+	}
+	
+	function goto_index(){
+		socket.send("[GOTO_INDEX_WITHOUT_CREATING]");
+		self.location="index.html"
+	}
+	
+	function create_map(){
+		socket.send("[GOTO_INDEX_WITH_CREATING]");
+		document.getElementById('zhezhao').style.display="none";
+		document.getElementById('loading').style.display="";
+		setTimeout("show_complete()","4000");
+	}
+	
+	function show_complete(){
+		document.getElementById('loading').style.display="none";
+		document.getElementById('Complete').style.display="";
+	}
+	
+	
+	
+	
+</script>
+
+<script>
+	var socket;
+	if ("WebSocket" in window) {
+		//var ws = new WebSocket("ws://192.168.0.104:8888");
+		//var ws = new WebSocket("ws://121.40.165.18:8800");
+		var ws = new WebSocket(get_addr());
+		socket = ws;
+		ws.onopen = function() {
+			console.log('连接成功');
+		};
+	
+		ws.onmessage = function(evt) {
+			var received_msg = evt.data; 
+			document.getElementById("showMes").value+=evt.data+"\n";
+		};
+
+		ws.onclose = function() {
+			alert("断开了连接");
+		};
+		
+	} else {
+		alert("浏览器不支持WebSocket");
+	}
+	
+</script>
+
+
+</head>
+
+<body>
+<h1 align="Center">欢迎使用这个系统</h1>
+<br/><br/><br/><br/>
+<h3 align="Center" id="loading">正在建图...</h3>
+<div align="Center" id="Complete">
+	<input type="button"  id ="select-button-X" onclick="goto_index()" style = "{font-size:80px}" value="建图完成"/>
+</div>
+<div id="zhezhao">
+	<div class="tankuang">
+		<div id="header">
+			<br/>
+			<span>是否需要建图</span>
+			<input type="button" id="header-right" onclick="hidder()" value="X"/>
+			<br/>
+			<div>
+				<input type="button" id="select-button-true" onclick="create_map()" value="是"/>
+				<input type="button" id="select-button-false" onclick="goto_index()" value="否"/>
+			<div>
+		</div>
+	</div>
+</div>
+
+<script>
+	hidder();
+	setTimeout("show()","2000");  
+</script>
+
+</body>
+
+</html>
