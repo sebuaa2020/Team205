@@ -97,6 +97,10 @@
 		
 		socket.send("[GET_BACK_POINT]");
 	}
+	
+	function item_identification(){
+		socket.send("ITEM_IDENT");
+	}
 
 	
 </script>
@@ -133,7 +137,7 @@
 <br/>
 <br/>
 <div id="index" align="center">
-	<input type="button" class="navigation" onclick="" value="物品识别"/>
+	<input type="button" class="navigation" onclick="item_identification()" value="物品识别"/>
 	<input type="button" class="navigation" onclick="nav_show()" value="建立巡航点"/>
 	<input type="button" class="navigation" onclick="nav_goto()" value="前往巡航点"/>
 	<input type="button" class="navigation" onclick="nav_back()" value="返回起始点"/>
